@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register-dto';
-import { Authorization } from './decoratro/authorization.decorator';
+import { Authorization } from './decorator/authorization.decorator';
 
 @Controller('auth')
 export class AuthController {
