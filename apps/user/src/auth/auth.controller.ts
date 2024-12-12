@@ -3,6 +3,7 @@ import {
   Controller,
   Post,
   UnauthorizedException,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,9 +14,11 @@ import {
   EventPattern,
   MessagePattern,
   Payload,
+  RpcException,
   Transport,
 } from '@nestjs/microservices';
 import { ParseBearerTokenDto } from './dto/parse-bearer-token.dto';
+import { RpcInterceptor } from '@app/common/interceptor/rpc.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -53,8 +56,8 @@ export class AuthController {
     // Transport.TCP 원래는 넣어줘야 하지만 우리는 1개만 사용하기 때문에 자동으로 인지함
   )
   @UsePipes(ValidationPipe)
+  @UseInterceptors(RpcInterceptor)
   parseBearerToken(@Payload() payload: ParseBearerTokenDto) {
-    console.log('Request Received');
     return this.authService.parseBearerToken(payload.token, false);
   }
 }
