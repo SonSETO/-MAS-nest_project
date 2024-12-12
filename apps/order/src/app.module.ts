@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ProductModule } from './product/product.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
+import { OrderModule } from './order/order.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -13,17 +14,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         DB_URL: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRootAsync({
+    MongooseModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.getOrThrow('DB_URL'),
-        autoLoadEntities: true,
-        synchronize: true,
+        uri: configService.getOrThrow('DB_URL'),
       }),
       inject: [ConfigService],
     }),
-
-    ProductModule,
+    OrderModule,
   ],
 })
 export class AppModule {}
