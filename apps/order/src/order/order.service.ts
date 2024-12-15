@@ -146,6 +146,7 @@ export class OrderService {
           {
             ...payment,
             userEmail,
+            orderId,
           },
         ),
       );
@@ -176,5 +177,9 @@ export class OrderService {
       }
       throw e;
     }
+  }
+
+  changeOrderStatus(orderId: string, status: OrderStatus) {
+    return this.orderModel.findByIdAndUpdate(orderId, { status });
   }
 }
