@@ -12,8 +12,4 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   profile: string;
-
-  @IsString()
-  @IsNotEmpty()
-  token:string
 }

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register-dto';
-import { Authorization } from './decorator/authorization.decorator';
+// import { Authorization } from './decorator/authorization.decorator';
 import {
   EventPattern,
   MessagePattern,
@@ -19,32 +19,33 @@ import {
 } from '@nestjs/microservices';
 import { ParseBearerTokenDto } from './dto/parse-bearer-token.dto';
 import { RpcInterceptor } from '@app/common/interceptor/rpc.interceptor';
+import { Authorization } from 'apps/gateway/src/auth/decorator/authorization.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
-  @UsePipes(ValidationPipe)
-  registerUser(
-    @Authorization() token: string,
-    @Body() registerDto: RegisterDto,
-  ) {
-    if (token === null) {
-      throw new UnauthorizedException('토큰을 입력해주세요!');
-    }
+  // @Post('register')
+  // @UsePipes(ValidationPipe)
+  // registerUser(
+  //   @Authorization() token: string,
+  //   @Body() registerDto: RegisterDto,
+  // ) {
+  //   if (token === null) {
+  //     throw new UnauthorizedException('토큰을 입력해주세요!');
+  //   }
 
-    return this.authService.register(token, registerDto);
-  }
+  //   return this.authService.register(token, registerDto);
+  // }
 
-  @Post('login')
-  @UsePipes(ValidationPipe)
-  loginUser(@Authorization() token: string) {
-    if (token === null) {
-      throw new UnauthorizedException('토큰을 입력해주세요!');
-    }
-    return this.authService.login(token);
-  }
+  // @Post('login')
+  // @UsePipes(ValidationPipe)
+  // loginUser(@Authorization() token: string) {
+  //   if (token === null) {
+  //     throw new UnauthorizedException('토큰을 입력해주세요!');
+  //   }
+  //   return this.authService.login(token);
+  // }
 
   // 이벤트를 던지기만 함
   // @EventPattern()
@@ -59,5 +60,17 @@ export class AuthController {
   @UseInterceptors(RpcInterceptor)
   parseBearerToken(@Payload() payload: ParseBearerTokenDto) {
     return this.authService.parseBearerToken(payload.token, false);
+  }
+
+  @MessagePattern({
+    cmd: 'register',
+  })
+  registerUser(@Payload() registerDto: RegisterDto) {
+    const { token } = registerDto;
+    if (token === null) {
+      throw new UnauthorizedException('토큰을 입력해주세요!');
+    }
+
+    return this.authService.register(token, registerDto);
   }
 }
