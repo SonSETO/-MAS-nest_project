@@ -20,6 +20,7 @@ import {
 import { ParseBearerTokenDto } from './dto/parse-bearer-token.dto';
 import { RpcInterceptor } from '@app/common/interceptor/rpc.interceptor';
 import { Authorization } from 'apps/gateway/src/auth/decorator/authorization.decorator';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -61,7 +62,6 @@ export class AuthController {
   parseBearerToken(@Payload() payload: ParseBearerTokenDto) {
     return this.authService.parseBearerToken(payload.token, false);
   }
-
   @MessagePattern({
     cmd: 'register',
   })
@@ -72,5 +72,18 @@ export class AuthController {
     }
 
     return this.authService.register(token, registerDto);
+  }
+
+
+  @MessagePattern({
+    cmd:'login'
+  })
+  loginUser(@Payload()logindto:LoginDto){
+    const {token} = logindto
+    if(token === null){
+      throw new UnauthorizedException('토큰을 입력해주세요')
+    }
+
+    return this.authService.login(token)
   }
 }

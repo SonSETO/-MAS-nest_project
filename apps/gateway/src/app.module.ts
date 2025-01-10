@@ -20,7 +20,6 @@ import { ProductModule } from './product/product.module';
         ORDER_TCP_PORT: Joi.number().required(),
       }),
     }),
-    ,
     ClientsModule.registerAsync({
       clients: [
         {
@@ -59,7 +58,6 @@ import { ProductModule } from './product/product.module';
       ],
       isGlobal: true,
     }),
-    ,
     OrderModule,
     ProductModule,
     AuthModule,

@@ -12,18 +12,30 @@ export class AuthService {
     private readonly userMicroservice: ClientProxy,
   ) {}
 
-
-  register(token:string, registerDto:RegisterDto){
-
-    return lastValueFrom(this.userMicroservice.send({
-        cmd: 'register'
-    },{
-        ...registerDto,
-        token
-    }))
+  register(token: string, registerDto: RegisterDto) {
+    return lastValueFrom(
+      this.userMicroservice.send(
+        {
+          cmd: 'register',
+        },
+        {
+          ...registerDto,
+          token,
+        },
+      ),
+    );
   }
 
-  
-
-//   login(){}
+  login(token: string) {
+    return lastValueFrom(
+      this.userMicroservice.send(
+        {
+          cmd: 'login',
+        },
+        {
+          token,
+        },
+      ),
+    );
+  }
 }
